@@ -10,7 +10,10 @@ class PublisherListener extends AbstractInterceptHandler
     @Override
     public void onPublish(InterceptPublishMessage message)
     {
-        System.out.println("moquette mqtt broker message intercepted, topic: " + message.getTopicName()
-                + ", content: " + new String(message.getPayload().array()));
+        System.out.println("\nClient " + message.getClientID() + "\nTopic: " + message.getTopicName()
+                + "\nMessage: " + new String(message.getPayload().array()));
+
     }
+
+
 }

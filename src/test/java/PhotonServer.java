@@ -6,18 +6,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import io.moquette.interception.InterceptHandler;
 import io.moquette.server.Server;
-import io.moquette.server.config.ClasspathConfig;
 import io.moquette.server.config.FilesystemConfig;
 import io.moquette.server.config.IConfig;
+import org.apache.log4j.BasicConfigurator;
 
 public class PhotonServer
 {
 
     public PhotonServer() throws IOException
     {
+        BasicConfigurator.configure();
         File configFile = new File("test.conf");
         final IConfig classPathConfig = new FilesystemConfig(configFile);
 

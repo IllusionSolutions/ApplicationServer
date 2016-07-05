@@ -10,8 +10,11 @@ class PublisherListener extends AbstractInterceptHandler
     @Override
     public void onPublish(InterceptPublishMessage message)
     {
-        System.out.println("\nClient " + message.getClientID() + "\nTopic: " + message.getTopicName()
-                + "\nMessage: " + new String(message.getPayload().array()));
+        System.out.println(
+                "\nClient " + message.getClientID() +
+                 "\nTopic: " + message.getTopicName() +
+                 "\nMessage: " + new String(message.getPayload().array())
+        );
 
     }
 

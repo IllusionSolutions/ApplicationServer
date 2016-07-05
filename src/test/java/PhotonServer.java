@@ -19,12 +19,14 @@ public class PhotonServer
     {
         BasicConfigurator.configure();
         File configFile = new File("test.conf");
-        final IConfig classPathConfig = new FilesystemConfig(configFile);
 
+        final IConfig classPathConfig = new FilesystemConfig(configFile);
         final Server mqttBroker = new Server();
         final List<? extends InterceptHandler> userHandlers = Arrays.asList(new PublisherListener());
+
         mqttBroker.startServer(classPathConfig, userHandlers);
-        System.out.println("MQTT Server Started");
+
+        System.out.println("MQTT Server Started.");
     }
 
     public static void main(String [] args) throws IOException

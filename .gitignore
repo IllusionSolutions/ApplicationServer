@@ -11,7 +11,7 @@
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 IllusionSolutions.iml
-*.mapdb.*
+*.mapdb*
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids

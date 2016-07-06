@@ -12,12 +12,10 @@ class PublisherListener extends AbstractInterceptHandler
     {
         System.out.println(
                 "\nClient " + message.getClientID() +
-                 "\nTopic: " + message.getTopicName() +
-                 "\nMessage: " + new String(message.getPayload().array())
+                "\nTopic: " + message.getTopicName() +
+                "\nMessage: " + new String(message.getPayload().array())
         );
 
     }
-
-
 
 }

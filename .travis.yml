@@ -6,7 +6,7 @@ script:
 - mvn clean compile assembly:single
 
 addons:
-  ssh_known_hosts: $DEPLOY_HOST
+  ssh_known_hosts: simplysentient.com
 
 before_install:
 - bash _scripts/install.sh

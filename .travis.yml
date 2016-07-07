@@ -12,4 +12,5 @@ before_install:
 - bash _scripts/install.sh
 
 after_success:
+- ssh-keyscan -H -t rsa,dsa simplysentient.com >> ~/.ssh/known_hosts
 - sudo scp target/applicationServer-*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH

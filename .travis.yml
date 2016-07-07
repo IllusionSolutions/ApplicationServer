@@ -1,8 +1,15 @@
 language: java
 sudo: true
 jdk:
-  - oraclejdk8
+- oraclejdk8
 script:
-  - mvn clean compile assembly:single
+- mvn clean compile assembly:single
+
+addons:
+  ssh_known_hosts: $DEPLOY_HOST
+
+before_install:
+- bash _scripts/install.sh
+
 after_success:
-  - sudo scp target/applicationServer-*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- sudo scp target/applicationServer-*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH

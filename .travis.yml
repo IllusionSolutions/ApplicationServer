@@ -13,4 +13,4 @@ before_install:
 
 after_success:
 - ssh-keyscan -H -t rsa,dsa simplysentient.com >> ~/.ssh/known_hosts
-- sudo scp target/applicationServer-*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- scp -o StrictHostKeyChecking=no target/applicationServer-*.jar $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH

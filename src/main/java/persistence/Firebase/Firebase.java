@@ -46,12 +46,6 @@ public class Firebase implements PersistenceHandler
 	{
 		APIKey = apiKey;
 	}
-
-
-	public StoreObject buildStore(String[] data)
-	{
-		return null;
-	}
 	
 	public boolean store( StoreObject data )
 	{

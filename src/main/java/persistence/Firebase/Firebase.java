@@ -14,13 +14,35 @@ public class Firebase implements PersistenceHandler
 	private String APIKey;
 	
 	private String URL;
-	
-	public String retrieve( )
+
+	public Firebase()
 	{
-		return null;
+
 	}
 
-	public StoreObject buildStore(String data)
+	public Firebase(String APIKey, String URL)
+	{
+		this.APIKey = APIKey;
+		this.URL = URL;
+	}
+
+	public String getAPIKey()
+	{
+		return APIKey;
+	}
+
+	public String getURL()
+	{
+		return URL;
+	}
+
+	public void setAPIKey(String apiKey)
+	{
+		APIKey = apiKey;
+	}
+
+
+	public StoreObject buildStore(String[] data)
 	{
 		return null;
 	}

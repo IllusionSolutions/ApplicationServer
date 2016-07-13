@@ -1,7 +1,3 @@
-/**
- * Created by Stuart on 2016/06/26.
- */
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,11 +14,13 @@ import persistence.PersistenceHandler.StoreObject;
 public class PhotonServer
 {
     // Declaring class members
-    File configFile;
-    IConfig classPathConfig;
-    Server mqttBroker;
-    List<? extends InterceptHandler> userHandlers;
-
+    private File configFile;
+    private IConfig classPathConfig;
+    private Server mqttBroker;
+    private List<? extends InterceptHandler> userHandlers;
+    private String APIKey = "";
+    private String URL = "";
+    
     public PhotonServer() throws IOException
     {
         BasicConfigurator.configure();
@@ -31,7 +29,7 @@ public class PhotonServer
         classPathConfig = new FilesystemConfig(configFile);
         mqttBroker = new Server();
 
-        userHandlers = Arrays.asList(new PublisherListener(new Firebase()));
+        userHandlers = Arrays.asList(new PublisherListener(new Firebase(APIKey,URL)));
 
         mqttBroker.startServer(classPathConfig, userHandlers);
         System.out.println("Photon Server Started.");

@@ -2,11 +2,8 @@ import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.omg.CORBA.Object;
 import persistence.PersistenceHandler.PersistenceHandler;
-import org.json.simple.JSONObject;
 
-import java.util.Hashtable;
 
 class PublisherListener extends AbstractInterceptHandler
 {
@@ -15,7 +12,7 @@ class PublisherListener extends AbstractInterceptHandler
     private String payload = "";
     private String array[];
 
-    public PublisherListener(PersistenceHandler handler)
+    PublisherListener(PersistenceHandler handler)
     {
         super();
         persistenceHandler = handler;

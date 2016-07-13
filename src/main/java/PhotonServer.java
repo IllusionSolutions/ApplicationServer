@@ -17,16 +17,21 @@ import persistence.PersistenceHandler.StoreObject;
 
 public class PhotonServer
 {
+    // Declaring class members
+    File configFile;
+    IConfig classPathConfig;
+    Server mqttBroker;
+    List<? extends InterceptHandler> userHandlers;
 
     public PhotonServer() throws IOException
     {
         BasicConfigurator.configure();
-        File configFile = new File("server.conf");
+        configFile = new File("server.conf");
 
-        IConfig classPathConfig = new FilesystemConfig(configFile);
-        Server mqttBroker = new Server();
+        classPathConfig = new FilesystemConfig(configFile);
+        mqttBroker = new Server();
 
-        List<? extends InterceptHandler> userHandlers = Arrays.asList(new PublisherListener(new Firebase()));
+        userHandlers = Arrays.asList(new PublisherListener(new Firebase()));
 
         mqttBroker.startServer(classPathConfig, userHandlers);
         System.out.println("Photon Server Started.");

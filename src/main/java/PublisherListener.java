@@ -108,7 +108,7 @@ class PublisherListener extends AbstractInterceptHandler
      * correct JSON format. This is achieved by passing the String to a JSON parser
      * which will return an exception if the String is not a correct (parseable) format.
      * @param payload               The String which is to be checked.
-     * @return boolean              Returns true if the String is in the correct JSON
+     * @return                      Returns true if the String is in the correct JSON
      *                              format, else it returns false.
      */
     public boolean validateData(String payload)
@@ -124,5 +124,28 @@ class PublisherListener extends AbstractInterceptHandler
             return false;
         }
         return true;
+    }
+
+    /** Takes in a String as a parameter and parses it into a JSONObject, which it then
+     * returns.
+     * @param payload               The String which needs to be parsed into a JSONObject.
+     * @return                      A JSONObject which is made up of the parsed input String
+     *                              parameter.
+     */
+    public JSONObject convertToJson(String payload)
+    {
+        JSONParser parser;
+        JSONObject jsonObject = null;
+        try
+        {
+            parser = new JSONParser();
+            jsonObject = (JSONObject) parser.parse(payload);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 }

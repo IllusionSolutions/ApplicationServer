@@ -1,7 +1,10 @@
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import persistence.PersistenceHandler.PersistenceHandler;
-
+import persistence.PersistenceHandler.StoreObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
 
 class PublisherListener extends AbstractInterceptHandler
 {
@@ -9,6 +12,7 @@ class PublisherListener extends AbstractInterceptHandler
     private String id = "";
     private String payload = "";
     private String array[];
+    private StoreObject toStore;
 
     PublisherListener(PersistenceHandler handler)
     {
@@ -43,5 +47,60 @@ class PublisherListener extends AbstractInterceptHandler
         array[1] = payload;
 
         return array;
+    }
+
+    /** Takes in a String array which contains the data received from the Photon device.
+     * This data is then extracted from the message, and used to populate a StoreObject
+     * which is passed to the PersistenceHandler object via the store() method.
+     *
+     * @param message           The String array containing the data from the Photon.
+     */
+    public void storeData(String[] message)
+    {
+        toStore = new StoreObject();
+
+        double current = 0.0;
+        double voltage = 0.0;
+        double truePower = 0.0;
+        double reactivePower = 0.0;
+        double apparentPower = 0.0;
+        double power = 0.0;
+
+        try
+        {
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(message[1]);
+
+            current = Double.parseDouble((String) jsonObject.get("Current"));
+            voltage = Double.parseDouble((String) jsonObject.get("Voltage"));
+
+//            double truePower = Double.parseDouble((String) jsonObject.get("True Power"));
+//            double reactivePower = Double.parseDouble((String) jsonObject.get("Reactive Power"));
+//            double apparentPower = Double.parseDouble((String) jsonObject.get("Apparent Power"));
+
+            power = Double.parseDouble((String) jsonObject.get("Power)"));
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        // Stores desired power data
+//        toStore.setId(message[0]);
+//        toStore.setCurrent(current);
+//        toStore.setVoltage(voltage);
+//        toStore.setTruePower(truePower);
+//        toStore.setReactivePower(reactivePower);
+//        toStore.setApparentPower(apparentPower);
+
+        // Stores temp power data
+        toStore.setId(message[0]);
+        toStore.setCurrent(current);
+        toStore.setVoltage(voltage);
+        toStore.setTruePower(power);
+        toStore.setReactivePower(reactivePower);
+        toStore.setApparentPower(apparentPower);
+
+        persistenceHandler.store(toStore);
     }
 }

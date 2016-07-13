@@ -103,4 +103,26 @@ class PublisherListener extends AbstractInterceptHandler
 
         persistenceHandler.store(toStore);
     }
+
+    /** Takes in a String as a parameter and checks whether said string is in the
+     * correct JSON format. This is achieved by passing the String to a JSON parser
+     * which will return an exception if the String is not a correct (parseable) format.
+     * @param payload               The String which is to be checked.
+     * @return boolean              Returns true if the String is in the correct JSON
+     *                              format, else it returns false.
+     */
+    public boolean validateData(String payload)
+    {
+        JSONParser parser = new JSONParser();
+
+        try
+        {
+            parser.parse(payload);
+        }
+        catch (ParseException e)
+        {
+            return false;
+        }
+        return true;
+    }
 }

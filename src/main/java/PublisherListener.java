@@ -1,7 +1,5 @@
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import persistence.PersistenceHandler.PersistenceHandler;
 
 

@@ -20,6 +20,12 @@ public class Firebase implements PersistenceHandler
 
 	}
 
+	/** The Firebase class constructer, takes in two Strings, the APIKey and the URL.
+	 *
+	 * @param APIKey			The Firebase APIKey
+	 * @param URL				The Firebase URL
+	 * @return			        An array that stores the Photons ID and the Data we received
+	 */
 	public Firebase(String APIKey, String URL)
 	{
 		this.APIKey = APIKey;

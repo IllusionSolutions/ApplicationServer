@@ -7,9 +7,7 @@ import io.moquette.server.Server;
 import io.moquette.server.config.FilesystemConfig;
 import io.moquette.server.config.IConfig;
 import org.apache.log4j.BasicConfigurator;
-import persistence.Firebase.Firebase;
-import persistence.PersistenceHandler.PersistenceHandler;
-import persistence.PersistenceHandler.StoreObject;
+import persistence.FirebaseHandler.FirebaseHandler;
 
 public class PhotonServer
 {
@@ -19,7 +17,7 @@ public class PhotonServer
     private Server mqttBroker;
     private List<? extends InterceptHandler> userHandlers;
     private String APIKey = "";
-    private String URL = "";
+    private String URL = "https://";
     
     public PhotonServer() throws IOException
     {
@@ -29,7 +27,7 @@ public class PhotonServer
         classPathConfig = new FilesystemConfig(configFile);
         mqttBroker = new Server();
 
-        userHandlers = Arrays.asList(new PublisherListener(new Firebase(APIKey,URL)));
+        userHandlers = Arrays.asList(new PublisherListener(new FirebaseHandler(APIKey,URL)));
 
         mqttBroker.startServer(classPathConfig, userHandlers);
         System.out.println("Photon Server Started.");

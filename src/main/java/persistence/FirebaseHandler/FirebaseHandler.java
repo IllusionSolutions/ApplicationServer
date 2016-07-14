@@ -70,4 +70,30 @@ public class FirebaseHandler implements PersistenceHandler
 
 		return false;
 	}
+
+	/** The validateId method, takes in one Strings.
+	 *
+	 * @param data			Data(id) to be check if it is in Firebase
+	 * @return			    True if id is in firebase, false if it isn't
+	 */
+	public boolean validateId(String data)
+	{
+		String newURL = URL+"/devices/0/id";
+		Firebase ref = new Firebase(newURL);
+
+		ref.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot snapshot) {
+				if (snapshot.exists()) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			@Override
+			public void onCancelled(FirebaseError firebaseError) { }
+		});
+	}
 }

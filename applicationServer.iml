@@ -9,7 +9,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.firebase:firebase-client:1.0.18" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-server-sdk:3.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: io.moquette:moquette-broker:0.8" level="project" />

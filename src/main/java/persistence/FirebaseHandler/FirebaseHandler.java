@@ -121,7 +121,7 @@ public class FirebaseHandler implements PersistenceHandler
 		return false;
 	}
 
-	/** Takes in a month string, and determines the month's index.
+	/** Takes in a month string, and determines the month's index from the month array.
 	 *
 	 * @param month			Current month
 	 * @return			    The index, if the month isn't valid it returns -1

@@ -28,17 +28,21 @@ class PublisherListener extends AbstractInterceptHandler
                 "\nTopic: " + message.getTopicName() +
                 "\nMessage: " + new String(message.getPayload().array())
         );
+        System.out.println("\nAttempting to store data:\n=============================\n");
+        String[] temp = this.parse(message);
+        System.out.println(temp[1]);
+        this.storeData(temp);
     }
 
     /** Takes in the InterceptPublishMessage message, and seperates the Photons ID
      * from the payload, namely the Current, Voltage and Power, which
-     * are all stored in a JSON String. The retrieve function returns a String array
+     * are all stored in a JSON String. The parse function returns a String array
      * that stores the ID and the payload JSON String.
      *
      * @param message			The data we receive from the Photon
      * @return			        An array that stores the Photons ID and the Data we received
      */
-    private String[] retrieve(InterceptPublishMessage message)
+    private String[] parse(InterceptPublishMessage message)
     {
         array = new String[2];
         id = message.getClientID();
@@ -71,14 +75,14 @@ class PublisherListener extends AbstractInterceptHandler
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(message[1]);
 
-            current = Double.parseDouble((String) jsonObject.get("Current"));
-            voltage = Double.parseDouble((String) jsonObject.get("Voltage"));
+            current = (Double) jsonObject.get("current");
+            voltage = (Double) jsonObject.get("voltage");
+            power = (Double) jsonObject.get("power");
 
 //            double truePower = Double.parseDouble((String) jsonObject.get("True Power"));
 //            double reactivePower = Double.parseDouble((String) jsonObject.get("Reactive Power"));
 //            double apparentPower = Double.parseDouble((String) jsonObject.get("Apparent Power"));
 
-            power = Double.parseDouble((String) jsonObject.get("Power)"));
         }
         catch (ParseException e)
         {

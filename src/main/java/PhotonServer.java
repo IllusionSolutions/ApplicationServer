@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +17,6 @@ public class PhotonServer
     private IConfig classPathConfig;
     private Server mqttBroker;
     private List<? extends InterceptHandler> userHandlers;
-    private String APIKey = "";
-    private String URL = "https://";
     
     public PhotonServer() throws IOException
     {
@@ -27,7 +26,9 @@ public class PhotonServer
         classPathConfig = new FilesystemConfig(configFile);
         mqttBroker = new Server();
 
-        userHandlers = Arrays.asList(new PublisherListener(new FirebaseHandler(APIKey,URL)));
+        FirebaseHandler firebase = new FirebaseHandler(new FileInputStream("auth.json"));
+        firebase.setURL("https://powercloud-bf968.firebaseio.com/");
+        userHandlers = Arrays.asList(new PublisherListener(firebase));
 
         mqttBroker.startServer(classPathConfig, userHandlers);
         System.out.println("Photon Server Started.");
@@ -37,5 +38,4 @@ public class PhotonServer
     {
         new PhotonServer();
     }
-
 }

@@ -6,6 +6,7 @@ package persistence.FirebaseHandler;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import persistence.PersistenceHandler.PersistenceHandler;
@@ -29,9 +30,19 @@ public class FirebaseHandler implements PersistenceHandler
 
 	private FirebaseDatabase powerCloud;
 
-	public FirebaseHandler()
-	{
+	private FileInputStream authentication;
 
+	public FirebaseHandler(FileInputStream f)
+	{
+		authentication = f;
+
+		// Initialize the app with a service account, granting admin privileges
+		FirebaseOptions options;
+		options = new FirebaseOptions.Builder()
+				.setDatabaseUrl(URL)
+				.setServiceAccount(authentication)
+				.build();
+		FirebaseApp.initializeApp(options);
 	}
 
 	/** The FirebaseHandler class constructer, takes in two Strings, the APIKey and the URL.
@@ -76,25 +87,19 @@ public class FirebaseHandler implements PersistenceHandler
 		int month_int;
 		int day_int;
 
-		// Initialize the app with a service account, granting admin privileges
-		try
-		{
-			FirebaseOptions options;
-			options = new FirebaseOptions.Builder()
-                    .setDatabaseUrl(this.getURL())
-                    .setServiceAccount(new FileInputStream("authentication_configuration.json"))
-                    .build();
-			FirebaseApp.initializeApp(options);
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-
 		device = 0;
 		day = "";
 		month = "";
 		year = "";
+
+
+		// Initialize the app with a service account, granting admin privileges
+		FirebaseOptions options;
+		options = new FirebaseOptions.Builder()
+				.setDatabaseUrl(URL)
+				.setServiceAccount(authentication)
+				.build();
+		FirebaseApp.initializeApp(options);
 
 		/*Splitting the date into:
 			Day: eg 14
@@ -102,22 +107,50 @@ public class FirebaseHandler implements PersistenceHandler
 			Year: eg 2016
 
 		  From:
-		  	on Jul 14 09:51:52 CAT 2016
+		  	Mon Jul 14 09:51:52 CAT 2016
 		 */
 		Date date = new Date();
-		device = validateId(storeObject.getId());
-		day = date.toString().substring(4,7);
-		month = date.toString().substring(8,10);
-		year = date.toString().substring(24,28);
+		device = validateId(data.getId());
+		String[] temp = date.toString().split(" ");
 
+		day = temp[2];
+		month = temp[1];
+		year = temp[5];
+
+		System.out.println("\nDate: " + day + "/" + month + "/" + year);
 		day_int = Integer.parseInt(day);
 		day_int -= 1;
 		month_int = checkMonth(month);
 
 		//Creating the Firebase reference
+		String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/";
+		System.out.println("ParsedURL: " + tempURL);
 		powerCloud = FirebaseDatabase.getInstance();
-		powerCloudRef = powerCloud.getReference(device + "/data/" + year + "/" + month_int + "/" + day_int);
+		powerCloudRef = powerCloud.getReference(tempURL);
 
+		System.out.println("\nFirebase App: " + powerCloud.getApp().getName());
+		System.out.println("URL: " + getURL() + tempURL);
+		System.out.println("Reference" + powerCloud.getReference().toString());
+		System.out.println("URL Reference" + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
+		System.out.println("Data: " + data.toString());
+
+		//powerCloudRef = powerCloudRef.push();
+		powerCloudRef.setValue(data, new DatabaseReference.CompletionListener()
+		{
+			@Override
+			public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
+			{
+				if (databaseError != null)
+				{
+					System.out.println("What is this? Amateur hour?");
+					System.out.println(databaseError.getMessage());
+				}
+				else
+				{
+					System.out.println("Success!");
+				}
+			}
+		});
 		return false;
 	}
 
@@ -134,6 +167,11 @@ public class FirebaseHandler implements PersistenceHandler
 				return i;
 		}
 		return  -1;
+	}
+
+	public void setURL(String url)
+	{
+		this.URL = url;
 	}
 
 	/** The validateId method, takes in one Strings.
@@ -160,6 +198,6 @@ public class FirebaseHandler implements PersistenceHandler
 			@Override
 			public void onCancelled(FirebaseError firebaseError) { }
 		});*/
-		return -1;
+		return 0;
 	}
 }

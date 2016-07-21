@@ -14,6 +14,7 @@ import persistence.PersistenceHandler.StoreObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.*;
 import java.util.Date;
 
 public class FirebaseHandler implements PersistenceHandler
@@ -24,7 +25,7 @@ public class FirebaseHandler implements PersistenceHandler
 
 	private String URL;
 
-	private String [] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+	private final String [] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 	private DatabaseReference powerCloudRef;
 
@@ -32,17 +33,19 @@ public class FirebaseHandler implements PersistenceHandler
 
 	private FileInputStream authentication;
 
-	public FirebaseHandler(FileInputStream f)
+	public FirebaseHandler(FileInputStream authenticationFile, String databaseUrl)
 	{
-		authentication = f;
-
-		// Initialize the app with a service account, granting admin privileges
+		this.URL = databaseUrl;
+		authentication = authenticationFile;
 		FirebaseOptions options;
 		options = new FirebaseOptions.Builder()
 				.setDatabaseUrl(URL)
 				.setServiceAccount(authentication)
 				.build();
 		FirebaseApp.initializeApp(options);
+		powerCloud = FirebaseDatabase.getInstance();
+
+		// Initialize the app with a service account, granting admin privileges
 	}
 
 	/** The FirebaseHandler class constructer, takes in two Strings, the APIKey and the URL.
@@ -87,28 +90,11 @@ public class FirebaseHandler implements PersistenceHandler
 		int month_int;
 		int day_int;
 
-		device = 0;
+		device = validateId(data.getId());
 		day = "";
 		month = "";
 		year = "";
 
-
-		// Initialize the app with a service account, granting admin privileges
-		FirebaseOptions options;
-		options = new FirebaseOptions.Builder()
-				.setDatabaseUrl(URL)
-				.setServiceAccount(authentication)
-				.build();
-		FirebaseApp.initializeApp(options);
-
-		/*Splitting the date into:
-			Day: eg 14
-			Month: eg Jul
-			Year: eg 2016
-
-		  From:
-		  	Mon Jul 14 09:51:52 CAT 2016
-		 */
 		Date date = new Date();
 		device = validateId(data.getId());
 		String[] temp = date.toString().split(" ");
@@ -123,16 +109,16 @@ public class FirebaseHandler implements PersistenceHandler
 		month_int = checkMonth(month);
 
 		//Creating the Firebase reference
-		String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/";
-		System.out.println("ParsedURL: " + tempURL);
-		powerCloud = FirebaseDatabase.getInstance();
+		String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/" + data.getDatetime();
 		powerCloudRef = powerCloud.getReference(tempURL);
 
+		System.out.println("ParsedURL: " + tempURL);
 		System.out.println("\nFirebase App: " + powerCloud.getApp().getName());
 		System.out.println("URL: " + getURL() + tempURL);
 		System.out.println("Reference" + powerCloud.getReference().toString());
 		System.out.println("URL Reference" + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
 		System.out.println("Data: " + data.toString());
+
 
 		//powerCloudRef = powerCloudRef.push();
 		powerCloudRef.setValue(data, new DatabaseReference.CompletionListener()
@@ -169,6 +155,11 @@ public class FirebaseHandler implements PersistenceHandler
 		return  -1;
 	}
 
+
+	/** Set the Firebase URL needed to store data.
+	 *
+	 * @param url			The URL of the database. https://[url]
+	 */
 	public void setURL(String url)
 	{
 		this.URL = url;
@@ -176,8 +167,8 @@ public class FirebaseHandler implements PersistenceHandler
 
 	/** The validateId method, takes in one Strings.
 	 *
-	 * @param data			Data(id) to be check if it is in Firebase
-	 * @return			    True if id is in firebase, false if it isn't
+	 * @param data			Data(id) to be check if it is in Firebase.
+	 * @return			    True if ID is in firebase, false if it isn't.
 	 */
 	private int validateId(String data)
 	{

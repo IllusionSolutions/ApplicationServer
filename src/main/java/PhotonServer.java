@@ -26,8 +26,7 @@ public class PhotonServer
         classPathConfig = new FilesystemConfig(configFile);
         mqttBroker = new Server();
 
-        FirebaseHandler firebase = new FirebaseHandler(new FileInputStream("auth.json"));
-        firebase.setURL("https://powercloud-bf968.firebaseio.com/");
+        FirebaseHandler firebase = new FirebaseHandler(new FileInputStream(new File("serviceAccountCredentials.json")), "https://powercloud-bf968.firebaseio.com/");
         userHandlers = Arrays.asList(new PublisherListener(firebase));
 
         mqttBroker.startServer(classPathConfig, userHandlers);

@@ -12,6 +12,15 @@ public class StoreObject
 	private double truePower;
 	private double reactivePower;
 	private double apparentPower;
+	private long datetime;
+
+	public long getDatetime() {
+		return datetime;
+	}
+
+	public void setDatetime(long datetime) {
+		this.datetime = datetime;
+	}
 
 	public String getId()
 	{

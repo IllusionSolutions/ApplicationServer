@@ -68,7 +68,7 @@ class PublisherListener extends AbstractInterceptHandler
         double truePower = 0.0;
         double reactivePower = 0.0;
         double apparentPower = 0.0;
-        double power = 0.0;
+        long datetime = 0;
 
         try
         {
@@ -77,7 +77,9 @@ class PublisherListener extends AbstractInterceptHandler
 
             current = (Double) jsonObject.get("current");
             voltage = (Double) jsonObject.get("voltage");
-            power = (Double) jsonObject.get("power");
+            truePower = (Double) jsonObject.get("truePower");
+            datetime = (Long) jsonObject.get("time");
+
 
 //            double truePower = Double.parseDouble((String) jsonObject.get("True Power"));
 //            double reactivePower = Double.parseDouble((String) jsonObject.get("Reactive Power"));
@@ -101,9 +103,10 @@ class PublisherListener extends AbstractInterceptHandler
         toStore.setId(message[0]);
         toStore.setCurrent(current);
         toStore.setVoltage(voltage);
-        toStore.setTruePower(power);
+        toStore.setTruePower(truePower);
         toStore.setReactivePower(reactivePower);
         toStore.setApparentPower(apparentPower);
+        toStore.setDatetime(datetime);
 
         persistenceHandler.store(toStore);
     }

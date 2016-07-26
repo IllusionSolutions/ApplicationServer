@@ -59,8 +59,7 @@ class PublisherListener extends AbstractInterceptHandler
      *
      * @param message           The String array containing the data from the Photon.
      */
-    public void storeData(String[] message)
-    {
+    public void storeData(String[] message) {
         toStore = new StoreObject();
 
         double current = 0.0;

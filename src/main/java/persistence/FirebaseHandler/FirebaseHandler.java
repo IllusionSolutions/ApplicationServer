@@ -6,9 +6,7 @@ package persistence.FirebaseHandler;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 import persistence.PersistenceHandler.PersistenceHandler;
 import persistence.PersistenceHandler.StoreObject;
 
@@ -16,6 +14,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class FirebaseHandler implements PersistenceHandler
 {
@@ -83,61 +85,11 @@ public class FirebaseHandler implements PersistenceHandler
 	 */
 	public boolean store( StoreObject data )
 	{
-		String day;
-		String month;
-		String year;
-		int device;
-		int month_int;
-		int day_int;
 
-		device = validateId(data.getId());
-		day = "";
-		month = "";
-		year = "";
+		storeObject = data;
+		validateId(data.getId());
 
-		Date date = new Date();
-		device = validateId(data.getId());
-		String[] temp = date.toString().split(" ");
-
-		day = temp[2];
-		month = temp[1];
-		year = temp[5];
-
-		System.out.println("\nDate: " + day + "/" + month + "/" + year);
-		day_int = Integer.parseInt(day);
-		day_int -= 1;
-		month_int = checkMonth(month);
-
-		//Creating the Firebase reference
-		String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/" + data.getDatetime();
-		powerCloudRef = powerCloud.getReference(tempURL);
-
-		System.out.println("ParsedURL: " + tempURL);
-		System.out.println("\nFirebase App: " + powerCloud.getApp().getName());
-		System.out.println("URL: " + getURL() + tempURL);
-		System.out.println("Reference" + powerCloud.getReference().toString());
-		System.out.println("URL Reference" + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
-		System.out.println("Data: " + data.toString());
-
-
-		//powerCloudRef = powerCloudRef.push();
-		powerCloudRef.setValue(data, new DatabaseReference.CompletionListener()
-		{
-			@Override
-			public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference)
-			{
-				if (databaseError != null)
-				{
-					System.out.println("What is this? Amateur hour?");
-					System.out.println(databaseError.getMessage());
-				}
-				else
-				{
-					System.out.println("Success!");
-				}
-			}
-		});
-		return false;
+		return true;
 	}
 
 	/** Takes in a month string, and determines the month's index from the month array.
@@ -167,28 +119,108 @@ public class FirebaseHandler implements PersistenceHandler
 
 	/** The validateId method, takes in one Strings.
 	 *
-	 * @param data			Data(id) to be check if it is in Firebase.
-	 * @return			    True if ID is in firebase, false if it isn't.
+	 * @param id			Data(id) to be check if it is in Firebase. Calls the store(int) method.
 	 */
-	private int validateId(String data)
+	private void validateId(String id)  {
+		//Creating the Firebase reference
+		powerCloud = FirebaseDatabase.getInstance();
+		powerCloudRef = powerCloud.getReference("/");
+
+		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot dataSnapshot)
+				{
+					boolean found = false;
+					int index = -1;
+
+					if (dataSnapshot.getChildrenCount() > 0)
+					{
+						System.out.println(dataSnapshot.getChildrenCount());
+						for (DataSnapshot c : dataSnapshot.getChildren())
+						{
+							DeviceMeta d = c.child("meta/").getValue(DeviceMeta.class);
+
+							if (d.getId().equals(id))
+							{
+								found = true;
+								index = Integer.parseInt(c.getKey());
+								store(index);
+								break;
+							}
+						}
+
+						store(index);
+					}
+				}
+
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+					System.out.println("The read failed: " + databaseError.getCode());
+				}
+			});
+	}
+
+	/** The store method, takes in one Integer.
+	 *
+	 * @param id			The id where the data must be placed in Firebase.
+	 */
+	private boolean store(int id)
 	{
-		/*String newURL = URL+"/devices/0/id";
-		Firebase ref = new Firebase(newURL);
+		String day;
+		String month;
+		String year;
+		int device;
+		int month_int;
+		int day_int;
 
-		ref.child(data).addListenerForSingleValueEvent(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot snapshot) {
-				if (snapshot.exists()) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
+		device = id;
+		day = "";
+		month = "";
+		year = "";
+		Date date = new Date();
+		System.out.println("DEVICE ID " + device);
 
-			@Override
-			public void onCancelled(FirebaseError firebaseError) { }
-		});*/
-		return 0;
+		if (device != -1)
+		{
+			String[] temp = date.toString().split(" ");
+
+			day = temp[2];
+			month = temp[1];
+			year = temp[5];
+
+			System.out.println("\nDate: " + day + "/" + month + "/" + year);
+			day_int = Integer.parseInt(day);
+			day_int -= 1;
+			month_int = checkMonth(month);
+
+			//Creating the Firebase reference
+			String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime();
+			powerCloudRef = powerCloud.getReference(tempURL);
+
+			System.out.println("ParsedURL: " + tempURL);
+			System.out.println("\nFirebase App: " + powerCloud.getApp().getName());
+			System.out.println("URL: " + getURL() + tempURL);
+			System.out.println("Reference" + powerCloud.getReference().toString());
+			System.out.println("URL Reference" + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
+			System.out.println("Data: " + storeObject.toString());
+
+
+			//powerCloudRef = powerCloudRef.push();
+			powerCloudRef.setValue(storeObject, new DatabaseReference.CompletionListener() {
+				@Override
+				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+					if (databaseError != null) {
+						System.out.println("What is this? Amateur hour?");
+						System.out.println(databaseError.getMessage());
+					}
+					else
+						{
+						System.out.println("Success!");
+					}
+				}
+			});
+			return true;
+		}
+		return false;
 	}
 }

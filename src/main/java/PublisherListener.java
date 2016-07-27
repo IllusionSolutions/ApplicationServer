@@ -79,26 +79,12 @@ class PublisherListener extends AbstractInterceptHandler
             truePower = (Double) jsonObject.get("truePower");
             datetime = (Long) jsonObject.get("time");
 
-
-//            double truePower = Double.parseDouble((String) jsonObject.get("True Power"));
-//            double reactivePower = Double.parseDouble((String) jsonObject.get("Reactive Power"));
-//            double apparentPower = Double.parseDouble((String) jsonObject.get("Apparent Power"));
-
         }
         catch (ParseException e)
         {
             e.printStackTrace();
         }
 
-        // Stores desired power data
-//        toStore.setId(message[0]);
-//        toStore.setCurrent(current);
-//        toStore.setVoltage(voltage);
-//        toStore.setTruePower(truePower);
-//        toStore.setReactivePower(reactivePower);
-//        toStore.setApparentPower(apparentPower);
-
-        // Stores temp power data
         toStore.setId(message[0]);
         toStore.setCurrent(current);
         toStore.setVoltage(voltage);

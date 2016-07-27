@@ -12,29 +12,36 @@ import persistence.FirebaseHandler.FirebaseHandler;
 
 public class PhotonServer
 {
-    // Declaring class members
-    private File configFile;
+    private File configFile, authorizationFile;
     private IConfig classPathConfig;
     private Server mqttBroker;
     private List<? extends InterceptHandler> userHandlers;
+    private String storageURL;
     
     public PhotonServer() throws IOException
     {
         BasicConfigurator.configure();
-        configFile = new File("server.conf");
 
+        configFile = new File("server.conf");
+        authorizationFile = new File("auth.json");
+
+        storageURL = "https://powercloud-bf968.firebaseio.com/";
         classPathConfig = new FilesystemConfig(configFile);
         mqttBroker = new Server();
 
-        FirebaseHandler firebase = new FirebaseHandler(new FileInputStream(new File("serviceAccountCredentials.json")), "https://powercloud-bf968.firebaseio.com/");
+        FirebaseHandler firebase = new FirebaseHandler(new FileInputStream(authorizationFile), storageURL);
         userHandlers = Arrays.asList(new PublisherListener(firebase));
 
         mqttBroker.startServer(classPathConfig, userHandlers);
-        System.out.println("Photon Server Started.");
+        System.out.println("Photon Server Started.\n\n");
     }
 
-    public static void main(String [] args) throws IOException
+    public static void main(String [] args)
     {
-        new PhotonServer();
+        try {
+            new PhotonServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

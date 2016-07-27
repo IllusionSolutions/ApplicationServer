@@ -12,10 +12,7 @@ public class StoreException extends Exception{
     /**
      * Constructs a new StoreException with null as its detail message.
      */
-    public StoreException()
-    {
-
-    }
+    public StoreException() {}
 
     /**
      * Constructs a new StoreException with the specified detail message

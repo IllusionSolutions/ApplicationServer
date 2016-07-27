@@ -3,6 +3,7 @@
  */
 
 package persistence.PersistenceHandler;
+import exceptions.DeviceNotFoundException;
 
 public interface PersistenceHandler
 {

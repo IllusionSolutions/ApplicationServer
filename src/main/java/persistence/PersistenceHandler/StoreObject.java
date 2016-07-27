@@ -82,7 +82,5 @@ public class StoreObject
 		this.apparentPower = apparentPower;
 	}
 
-	public String toString() {
-		return "{ power: " + this.truePower + ", voltage: " + this.voltage + ", current: " + this.current + " }";
-	}
+	public String toString() {	return "{ power: " + this.truePower + ", voltage: " + this.voltage + ", current: " + this.current + " }";	}
 }

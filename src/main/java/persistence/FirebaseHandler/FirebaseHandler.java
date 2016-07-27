@@ -7,32 +7,21 @@ package persistence.FirebaseHandler;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
+import exceptions.StoreException;
 import persistence.PersistenceHandler.PersistenceHandler;
 import persistence.PersistenceHandler.StoreObject;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.*;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class FirebaseHandler implements PersistenceHandler
 {
 	private StoreObject storeObject;
-
 	private String APIKey;
-
 	private String URL;
-
 	private final String [] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
-
 	private DatabaseReference powerCloudRef;
-
 	private FirebaseDatabase powerCloud;
-
 	private FileInputStream authentication;
 
 	public FirebaseHandler(FileInputStream authenticationFile, String databaseUrl)
@@ -123,14 +112,12 @@ public class FirebaseHandler implements PersistenceHandler
 	 */
 	private void validateId(String id)  {
 		//Creating the Firebase reference
-		powerCloud = FirebaseDatabase.getInstance();
 		powerCloudRef = powerCloud.getReference("/");
 
 		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot)
 				{
-					boolean found = false;
 					int index = -1;
 
 					if (dataSnapshot.getChildrenCount() > 0)
@@ -142,20 +129,17 @@ public class FirebaseHandler implements PersistenceHandler
 
 							if (d.getId().equals(id))
 							{
-								found = true;
 								index = Integer.parseInt(c.getKey());
-								store(index);
 								break;
 							}
 						}
-
 						store(index);
 					}
 				}
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
-					System.out.println("The read failed: " + databaseError.getCode());
+
 				}
 			});
 	}

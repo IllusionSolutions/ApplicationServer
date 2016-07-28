@@ -1,0 +1,64 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+
+\title{Instruction manual for PowerCloud}
+\author{Marc Antel\\ Brandon Wardley\\ Stuart Andrews\\ Mothusi Masibi}
+\date{\today}
+
+\begin{document}
+		\maketitle
+		\newpage
+	\section{Compiling and Installing from Source Code}
+		\subsection{Pre-requisites}
+			\textbf{Software}
+			Before proceeding please ensure you have the following software installed on your system:
+			\begin{itemize}
+				\item NodeJS and NPM
+				\item Bower
+				\item Gulp
+				\item Particle Dev
+				\item Java 8
+			\end{itemize}
+			
+			\textbf{Hardware}
+			\begin{itemize}
+				\item A Particle Photon.
+				\item A Computer with internet access which does not block incoming and outgoing connections on port 1883 and 80.
+			\end{itemize}
+		\subsection{Firmware}
+			Compile and flash the photon with the following commands, please take note that if you run the application server on a local machine, retrieve the IP address and insert it into the firmware's code.\\
+			
+			\textbf{Compiling the Firmware}\\
+			
+			Follow the instructions here in order to compile the firmware using Particle Dev.
+			
+			\textit{If you run into errors, please see the troubleshooting guide at the end of this document.}
+			
+		\subsection{Application Server}
+			Currently, the \textit{application-server} branch hosts the source code for the Application Server. It needs to be compiled using maven and run on a device which doesn't block incoming and outgoing connections on port 1883.\\
+			
+			\textbf{Compiling the Application Server}\\
+			Download the sources from GitHub and compile:\\
+			
+			\textit{If you run into errors, please see the troubleshooting guide at the end of this document.}
+		\subsection{Web Server}
+			Open your console and redirect to the web-server files. Run npm install and bower install.
+		
+	\section{Starting PowerCloud}
+		\subsection{Firmware}
+			Once the firmware has been compiled and the binary file produced. Flash the photon with the following command:
+		\subsection{Application Server}
+		
+		\subsection{Web Server}
+			To start the PowerCloud Web-Server open the console, redirect to the Web-Server files and run the gulp serve command.
+		
+	\section{Troubleshooting}
+		I am getting errors when trying to install through the console.
+		-Try using sudo before the command. Example: sudo npm install particle-cli
+		
+		The Web-Server won't run and is giving errors when executing the gulp serve command.
+		-Make sure you've run npm install and bower install. 
+		-Make sure you're in the correct directory where the web-server is located.
+\end{document}

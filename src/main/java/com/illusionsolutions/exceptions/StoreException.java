@@ -5,7 +5,7 @@
  *	@brief An exception thrown when trying to store in database
  */
 
-package exceptions;
+package com.illusionsolutions.exceptions;
 
 public class StoreException extends Exception{
 

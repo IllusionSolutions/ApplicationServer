@@ -2,14 +2,13 @@
  * @(#) FirebaseHandler.java
  */
 
-package persistence.FirebaseHandler;
+package com.illusionsolutions.persistence.FirebaseHandler;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import org.mapdb.Store;
-import persistence.PersistenceHandler.PersistenceHandler;
-import persistence.PersistenceHandler.StoreObject;
+import com.illusionsolutions.persistence.PersistenceHandler.PersistenceHandler;
+import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
 
 import java.io.FileInputStream;
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.Date;
 public class FirebaseHandler implements PersistenceHandler
 {
 	private StoreObject storeObject;
-	private String APIKey;
 	private String URL;
 	private final String [] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 	private DatabaseReference powerCloudRef;
@@ -39,30 +37,18 @@ public class FirebaseHandler implements PersistenceHandler
 		// Initialize the app with a service account, granting admin privileges
 	}
 
-	/** The FirebaseHandler class constructer, takes in two Strings, the APIKey and the URL.
+	/** The FirebaseHandler class constructer, takes in one string the URL.
 	 *
-	 * @param APIKey			The FirebaseHandler APIKey
 	 * @param URL				The FirebaseHandler URL
 	 */
-	public FirebaseHandler(String APIKey, String URL)
+	public FirebaseHandler(String URL)
 	{
-		this.APIKey = APIKey;
 		this.URL = URL;
 	}
 
-	public String getAPIKey()
-	{
-		return APIKey;
-	}
-
-	private String getURL()
+	public String getURL()
 	{
 		return URL;
-	}
-
-	public void setAPIKey(String apiKey)
-	{
-		APIKey = apiKey;
 	}
 
 	/** Takes in a StoreObject object, and gets the authorization to edit Firebase.
@@ -86,7 +72,7 @@ public class FirebaseHandler implements PersistenceHandler
 	 * @param month			Current month
 	 * @return			    The index, if the month isn't valid it returns -1
 	 */
-	private int checkMonth(String month)
+	public int checkMonth(String month)
 	{
 		for(int i = 0 ; i < 12 ; i++)
 		{

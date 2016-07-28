@@ -79,7 +79,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>PhotonServer</mainClass>
+              <mainClass>com.illusionsolutions.PhotonServer</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -103,7 +103,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>PhotonServer</mainClass>
+              <mainClass>com.illusionsolutions.PhotonServer</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

@@ -1,12 +1,14 @@
+package com.illusionsolutions;
+
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
-import persistence.PersistenceHandler.PersistenceHandler;
-import persistence.PersistenceHandler.StoreObject;
+import com.illusionsolutions.persistence.PersistenceHandler.PersistenceHandler;
+import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 
-class PublisherListener extends AbstractInterceptHandler
+public class PublisherListener extends AbstractInterceptHandler
 {
     private PersistenceHandler persistenceHandler;
     private String id = "";
@@ -14,7 +16,7 @@ class PublisherListener extends AbstractInterceptHandler
     private String array[];
     private StoreObject toStore;
 
-    PublisherListener(PersistenceHandler handler)
+    public PublisherListener(PersistenceHandler handler)
     {
         super();
         persistenceHandler = handler;

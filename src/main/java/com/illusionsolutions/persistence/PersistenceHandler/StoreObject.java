@@ -2,7 +2,7 @@
  * @(#) StoreObject.java
  */
 
-package persistence.PersistenceHandler;
+package com.illusionsolutions.persistence.PersistenceHandler;
 
 public class StoreObject
 {

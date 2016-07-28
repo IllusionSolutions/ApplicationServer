@@ -2,8 +2,7 @@
  * @(#) PersistenceHandler.java
  */
 
-package persistence.PersistenceHandler;
-import exceptions.DeviceNotFoundException;
+package com.illusionsolutions.persistence.PersistenceHandler;
 
 public interface PersistenceHandler
 {

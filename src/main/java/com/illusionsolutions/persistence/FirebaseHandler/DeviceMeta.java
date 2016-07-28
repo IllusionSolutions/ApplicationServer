@@ -1,4 +1,4 @@
-package persistence.FirebaseHandler;
+package com.illusionsolutions.persistence.FirebaseHandler;
 
 public class DeviceMeta
 {

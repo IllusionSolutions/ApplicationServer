@@ -1,4 +1,4 @@
-package exceptions;
+package com.illusionsolutions.exceptions;
 
 /**
  * @file DeviceNotFoundException.java

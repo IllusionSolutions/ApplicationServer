@@ -7,7 +7,7 @@ package persistence.FirebaseHandler;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import exceptions.StoreException;
+import org.mapdb.Store;
 import persistence.PersistenceHandler.PersistenceHandler;
 import persistence.PersistenceHandler.StoreObject;
 
@@ -122,7 +122,6 @@ public class FirebaseHandler implements PersistenceHandler
 
 					if (dataSnapshot.getChildrenCount() > 0)
 					{
-						System.out.println(dataSnapshot.getChildrenCount());
 						for (DataSnapshot c : dataSnapshot.getChildren())
 						{
 							DeviceMeta d = c.child("meta/").getValue(DeviceMeta.class);
@@ -150,22 +149,21 @@ public class FirebaseHandler implements PersistenceHandler
 	 */
 	private boolean store(int id)
 	{
-		String day;
-		String month;
-		String year;
-		int device;
-		int month_int;
-		int day_int;
-
-		device = id;
-		day = "";
-		month = "";
-		year = "";
-		Date date = new Date();
-		System.out.println("DEVICE ID " + device);
-
-		if (device != -1)
+		if (id != -1)
 		{
+			String day;
+			String month;
+			String year;
+			int device;
+			int month_int;
+			int day_int;
+
+			device = id;
+			day = "";
+			month = "";
+			year = "";
+			Date date = new Date();
+
 			String[] temp = date.toString().split(" ");
 
 			day = temp[2];
@@ -181,30 +179,31 @@ public class FirebaseHandler implements PersistenceHandler
 			String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime();
 			powerCloudRef = powerCloud.getReference(tempURL);
 
-			System.out.println("ParsedURL: " + tempURL);
-			System.out.println("\nFirebase App: " + powerCloud.getApp().getName());
+			System.out.println("\nParsedURL: " + tempURL);
+			System.out.println("Firebase App: " + powerCloud.getApp().getName());
 			System.out.println("URL: " + getURL() + tempURL);
-			System.out.println("Reference" + powerCloud.getReference().toString());
-			System.out.println("URL Reference" + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
-			System.out.println("Data: " + storeObject.toString());
+			System.out.println("Reference: " + powerCloud.getReference().toString());
+			System.out.println("URL Reference: " + powerCloud.getReferenceFromUrl(getURL() + tempURL).toString());
+			System.out.println("Data: " + storeObject.toString() + "\n");
 
-
-			//powerCloudRef = powerCloudRef.push();
 			powerCloudRef.setValue(storeObject, new DatabaseReference.CompletionListener() {
 				@Override
 				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 					if (databaseError != null) {
 						System.out.println("What is this? Amateur hour?");
 						System.out.println(databaseError.getMessage());
-					}
-					else
-						{
+					} else {
 						System.out.println("Success!");
 					}
 				}
 			});
 			return true;
 		}
-		return false;
+		else
+		{
+			System.out.println("Device ID not found. Storage Failed:\n ID: " + storeObject.getId());
+			return false;
+		}
+
 	}
 }

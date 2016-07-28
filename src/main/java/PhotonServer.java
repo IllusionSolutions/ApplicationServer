@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import io.moquette.interception.InterceptHandler;
@@ -36,9 +38,34 @@ public class PhotonServer
         System.out.println("Photon Server Started.\n\n");
     }
 
+    public static void checkInternetConnection()
+    {
+        try
+        {
+            URL url = new URL("https://firebase.google.com");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            if (con.getResponseCode() == 200)
+            {
+                System.out.println("\nConnection established.\n");
+            }
+            else
+            {
+                System.out.println("\n Error: " + con.getResponseCode());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public static void main(String [] args)
     {
         try {
+            checkInternetConnection();
             new PhotonServer();
         } catch (IOException e) {
             e.printStackTrace();

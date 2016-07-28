@@ -38,34 +38,9 @@ public class PhotonServer
         System.out.println("Photon Server Started.\n\n");
     }
 
-    public static void checkInternetConnection()
-    {
-        try
-        {
-            URL url = new URL("https://firebase.google.com");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.connect();
-            if (con.getResponseCode() == 200)
-            {
-                System.out.println("\nConnection established.\n");
-            }
-            else
-            {
-                System.out.println("\n Error: " + con.getResponseCode());
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-
-
     public static void main(String [] args)
     {
         try {
-            checkInternetConnection();
             new PhotonServer();
         } catch (IOException e) {
             e.printStackTrace();

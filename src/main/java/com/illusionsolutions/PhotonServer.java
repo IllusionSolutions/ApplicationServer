@@ -22,6 +22,7 @@ public class PhotonServer
 
     public PhotonServer(String firebaseUrl) throws IOException
     {
+
         BasicConfigurator.configure();
 
         //Default Auth and config files
@@ -34,6 +35,7 @@ public class PhotonServer
 
         FirebaseHandler firebase = new FirebaseHandler(new FileInputStream(authorizationFile), storageURL);
         userHandlers = Arrays.asList(new PublisherListener(firebase));
+        startServer();
     }
 
     public void setConfigFile(String configFile) throws IOException

@@ -12,5 +12,16 @@ import static org.junit.Assert.*;
 
 public class ParameterizedTests
 {
+    @Test
+    public void checkMonthReturnsPositive()
+    {
+
+    }
+
+    @Test
+    public void checkMonthReturnsNegative()
+    {
+
+    }
 
 }

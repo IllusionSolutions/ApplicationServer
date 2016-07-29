@@ -5,14 +5,12 @@ import com.illusionsolutions.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 
 import com.illusionsolutions.persistence.FirebaseHandler.FirebaseHandler;
 import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
 import com.illusionsolutions.PublisherListener;
-import io.moquette.interception.messages.InterceptPublishMessage;
-import io.moquette.proto.messages.PublishMessage;
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,11 +22,12 @@ public class AssertTests
     private PhotonServer photonServer;
     private FirebaseHandler fbHandler;
     private final String authDIR = "auth.json";
-    private final String deviceID = "";
+    private final String deviceID = "Brandon";
     private File authFile;
     private PublisherListener pListener;
 
     //Create the Server
+    /*
     @Before
     public void createServer()
     {
@@ -43,7 +42,6 @@ public class AssertTests
 
     }
 
-    //Create Firebase
     @Before
     public void prepareFirebase()
     {
@@ -57,7 +55,7 @@ public class AssertTests
             e.printStackTrace();
         }
     }
-
+*/
     @Before
     public void preparePublisherListener()
     {
@@ -65,6 +63,7 @@ public class AssertTests
     }
 
     //Ensure that the server is running
+    /*
     @Test
     public void serverCanRun()
     {
@@ -80,6 +79,7 @@ public class AssertTests
             e.printStackTrace();
         }
     }
+    */
 
     //PublisherListenerTests
     @Test
@@ -99,7 +99,17 @@ public class AssertTests
         assertTrue(temp);
     }
 
+    @Test
+    public void validJsonConversion()
+    {
+        String data = "{\"truePower\":12.2, \"voltage\":2.1, \"current\":3.6}";
+        JSONObject temp = pListener.convertToJson(data);
+        assertNotNull(temp);
+
+    }
+
     //FirebaseHandler Tests
+    /*
     @Test
     public void firebaseNotNull()
     {
@@ -151,4 +161,5 @@ public class AssertTests
         assertTrue(stored);
 
     }
+    */
 }

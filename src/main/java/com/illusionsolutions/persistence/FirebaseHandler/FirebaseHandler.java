@@ -98,23 +98,23 @@ public class FirebaseHandler implements PersistenceHandler
 	 */
 	private void validateId(String id)  {
 		//Creating the Firebase reference
-		powerCloudRef = powerCloud.getReference("/");
+		powerCloudRef = powerCloud.getReference("/meta_data");
 
 		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot)
 				{
-					int index = -1;
+					String index = "-1";
 
 					if (dataSnapshot.getChildrenCount() > 0)
 					{
 						for (DataSnapshot c : dataSnapshot.getChildren())
 						{
-							DeviceMeta d = c.child("meta/").getValue(DeviceMeta.class);
+							System.out.println("----------------->"+c.getKey());
 
-							if (d.getId().equals(id))
+							if (c.getKey().equals(id))
 							{
-								index = Integer.parseInt(c.getKey());
+								index = id;
 								break;
 							}
 						}
@@ -133,14 +133,14 @@ public class FirebaseHandler implements PersistenceHandler
 	 *
 	 * @param id			The id where the data must be placed in Firebase.
 	 */
-	private boolean store(int id)
+	private boolean store(String id)
 	{
-		if (id != -1)
+		if (!id.equals("-1"))
 		{
 			String day;
 			String month;
 			String year;
-			int device;
+			String device;
 			int month_int;
 			int day_int;
 
@@ -162,7 +162,7 @@ public class FirebaseHandler implements PersistenceHandler
 			month_int = checkMonth(month);
 
 			//Creating the Firebase reference
-			String tempURL = device + "/data/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime();
+			String tempURL = "/device_data/" + device + "/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime();
 			powerCloudRef = powerCloud.getReference(tempURL);
 
 			System.out.println("\nParsedURL: " + tempURL);

@@ -66,36 +66,38 @@ public class PublisherListener extends AbstractInterceptHandler
 
         double current = 0.0;
         double voltage = 0.0;
-        double truePower = 0.0;
-        double reactivePower = 0.0;
-        double apparentPower = 0.0;
+        double power = 0.0;
         long datetime = 0;
 
-        try
+        if(validateData(message[1]))
         {
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(message[1]);
+            try
+            {
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(message[1]);
 
-            current = (Double) jsonObject.get("current");
-            voltage = (Double) jsonObject.get("voltage");
-            truePower = (Double) jsonObject.get("truePower");
-            datetime = (Long) jsonObject.get("time");
+                current = (Double) jsonObject.get("current");
+                voltage = (Double) jsonObject.get("voltage");
+                power = (Double) jsonObject.get("power");
+                datetime = (Long) jsonObject.get("time");
+            }
+            catch (ParseException e)
+            {
+                e.printStackTrace();
+            }
 
+            toStore.setId(message[0]);
+            toStore.setCurrent(current);
+            toStore.setVoltage(voltage);
+            toStore.setPower(power);
+            toStore.setDatetime(datetime);
+
+            persistenceHandler.store(toStore);
         }
-        catch (ParseException e)
+        else
         {
-            e.printStackTrace();
+            System.err.println("Invalid JSON Object\nFrom: " +  message[0] + "\n");
         }
-
-        toStore.setId(message[0]);
-        toStore.setCurrent(current);
-        toStore.setVoltage(voltage);
-        toStore.setTruePower(truePower);
-        toStore.setReactivePower(reactivePower);
-        toStore.setApparentPower(apparentPower);
-        toStore.setDatetime(datetime);
-
-        persistenceHandler.store(toStore);
     }
 
     /** Takes in a String as a parameter and checks whether said string is in the

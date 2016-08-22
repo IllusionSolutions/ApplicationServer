@@ -9,9 +9,7 @@ public class StoreObject
 	private String id;
 	private double current;
 	private double voltage;
-	private double truePower;
-	private double reactivePower;
-	private double apparentPower;
+	private double power;
 	private long datetime;
 
 	/** Returns the date and time when the device's reading took place.
@@ -88,61 +86,23 @@ public class StoreObject
 	*
 	* @return 				Returns the true power as a double.
 	*/
-	public double getTruePower()
+	public double getPower()
 	{
-		return this.truePower;
+		return this.power;
 	}
 
 	/** Takes in a double, and sets the true power measured during a reading to this double.
 	*
-	* @param truePower 		Double which contains the desired true power.
+	* @param power 		Double which contains the desired power.
 	*/
-	public void setTruePower(double truePower)
+	public void setPower(double power)
 	{
-		this.truePower = truePower;
-	}
-
-	/** Returns the reactive power recorded during a reading.
-	*
-	* @return 				Returns the reactive power as a double.
-	*/
-	public double getReactivePower()
-	{
-		return this.reactivePower;
-	}
-
-	/** Takes in a double, and sets the reactive power measured during a reading to this double.
-	*
-	* @param reactivePower 	Double which contains the desired reactive power.
-	*/
-	public void setReactivePower(double reactivePower)
-	{
-		this.reactivePower = reactivePower;
-	}
-
-	/** Returns the apparent power recorded during a reading.
-	*
-	* @return 				Returns the apparent power as a double.
-	*/
-	public double getApparentPower()
-	{
-		return this.apparentPower;
-	}
-
-	/** Takes in a double, and sets the apparent power measured during a reading to this double.
-	*
-	* @param apparentPower 	Double which contains the desired apparent power.
-	*/
-	public void setApparentPower(double apparentPower)
-	{
-		this.apparentPower = apparentPower;
+		this.power = power;
 	}
 
 	/** Returns the StoreObject in a String format.
 	*
 	* @return 				Returns a String representation of a StoreObject.
 	*/
-	public String toString() {
-		return "{ power: " + this.truePower + ", voltage: " + this.voltage + ", current: " + this.current + " }";
-	}
+	public String toString() { return "{ power: " + this.power + ", voltage: " + this.voltage + ", current: " + this.current + " }"; }
 }

@@ -11,6 +11,7 @@ public class StoreObject
 	private double voltage;
 	private double power;
 	private long datetime;
+	private Calculations calculations;
 
 	/** Returns the date and time when the device's reading took place.
 	*
@@ -98,6 +99,24 @@ public class StoreObject
 	public void setPower(double power)
 	{
 		this.power = power;
+	}
+
+	/** Returns the true power recorded during a reading.
+	 *
+	 * @return 				Returns the true power as a double.
+	 */
+	public Calculations getCalculations()
+	{
+		return this.calculations;
+	}
+
+	/** Takes in a double, and sets the true power measured during a reading to this double.
+	 *
+	 * @param calculations 		Double which contains the desired power.
+	 */
+	public void setCalculations(Calculations calculations)
+	{
+		this.calculations = calculations;
 	}
 
 	/** Returns the StoreObject in a String format.

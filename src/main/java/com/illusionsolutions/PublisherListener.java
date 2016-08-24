@@ -1,5 +1,6 @@
 package com.illusionsolutions;
 
+import com.illusionsolutions.persistence.PersistenceHandler.Calculations;
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import com.illusionsolutions.persistence.PersistenceHandler.PersistenceHandler;
@@ -11,6 +12,7 @@ import org.json.simple.JSONObject;
 public class PublisherListener extends AbstractInterceptHandler
 {
     private PersistenceHandler persistenceHandler;
+    private Calculations calculations;
     private String id = "";
     private String payload = "";
     private String array[];
@@ -78,7 +80,7 @@ public class PublisherListener extends AbstractInterceptHandler
 
                 current = (Double) jsonObject.get("current");
                 voltage = (Double) jsonObject.get("voltage");
-                power = (Double) jsonObject.get("power");
+                power = (Double) jsonObject.get("power");//Kilowatt/hours
                 datetime = (Long) jsonObject.get("time");
             }
             catch (ParseException e)
@@ -92,7 +94,10 @@ public class PublisherListener extends AbstractInterceptHandler
             toStore.setPower(power);
             toStore.setDatetime(datetime);
 
-            persistenceHandler.store(toStore);
+            calculations = new Calculations(power);
+            toStore.setCalculations(calculations);
+
+            persistenceHandler.store(toStore, calculations);
         }
         else
         {

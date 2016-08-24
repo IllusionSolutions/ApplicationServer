@@ -7,6 +7,7 @@ package com.illusionsolutions.persistence.FirebaseHandler;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
+import com.illusionsolutions.persistence.PersistenceHandler.Calculations;
 import com.illusionsolutions.persistence.PersistenceHandler.PersistenceHandler;
 import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 public class FirebaseHandler implements PersistenceHandler
 {
 	private StoreObject storeObject;
+	private Calculations calculations;
 	private String URL;
 	private final String [] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 	private DatabaseReference powerCloudRef;
@@ -58,9 +60,9 @@ public class FirebaseHandler implements PersistenceHandler
 	 * @param data			StoreObject object, containing the data that needs to be stored.
 	 * @return			    If the store is successful it returns true, else it returns false.
 	 */
-	public boolean store( StoreObject data )
+	public boolean store(StoreObject data, Calculations calculations)
 	{
-
+		this.calculations = calculations;
 		storeObject = data;
 		validateId(data.getId());
 
@@ -82,7 +84,6 @@ public class FirebaseHandler implements PersistenceHandler
 		return  -1;
 	}
 
-
 	/** Set the Firebase URL needed to store data.
 	 *
 	 * @param url			The URL of the database. https://[url]
@@ -100,7 +101,8 @@ public class FirebaseHandler implements PersistenceHandler
 		//Creating the Firebase reference
 		powerCloudRef = powerCloud.getReference("/meta_data");
 
-		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener() {
+		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener()
+		{
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot)
 				{
@@ -110,8 +112,6 @@ public class FirebaseHandler implements PersistenceHandler
 					{
 						for (DataSnapshot c : dataSnapshot.getChildren())
 						{
-							System.out.println("----------------->"+c.getKey());
-
 							if (c.getKey().equals(id))
 							{
 								index = id;
@@ -183,6 +183,21 @@ public class FirebaseHandler implements PersistenceHandler
 					}
 				}
 			});
+
+			/*tempURL = "/device_data/" + device + "/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime() + "/calculations";
+			powerCloudRef = powerCloud.getReference(tempURL);
+
+			powerCloudRef.setValue(calculations, new DatabaseReference.CompletionListener() {
+				@Override
+				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+					if (databaseError != null) {
+						System.out.println("What is this? Amateur hour?");
+						System.out.println(databaseError.getMessage());
+					} else {
+						System.out.println("Success!");
+					}
+				}
+			});*/
 			return true;
 		}
 		else
@@ -190,6 +205,5 @@ public class FirebaseHandler implements PersistenceHandler
 			System.out.println("Device ID not found. Storage Failed:\n ID: " + storeObject.getId());
 			return false;
 		}
-
 	}
 }

@@ -73,20 +73,13 @@ public class PublisherListener extends AbstractInterceptHandler
 
         if(validateData(message[1]))
         {
-            try
-            {
-                JSONParser parser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) parser.parse(message[1]);
 
-                current = (Double) jsonObject.get("current");
-                voltage = (Double) jsonObject.get("voltage");
-                power = (Double) jsonObject.get("power");//Kilowatt/hours
-                datetime = (Long) jsonObject.get("time");
-            }
-            catch (ParseException e)
-            {
-                e.printStackTrace();
-            }
+            JSONObject jsonObject = convertToJson(message[1]);
+
+            current = (Double) jsonObject.get("current");
+            voltage = (Double) jsonObject.get("voltage");
+            power = (Double) jsonObject.get("power");//Kilowatt/hours
+            datetime = (Long) jsonObject.get("time");
 
             toStore.setId(message[0]);
             toStore.setCurrent(current);
@@ -118,7 +111,10 @@ public class PublisherListener extends AbstractInterceptHandler
 
         try
         {
-            parser.parse(payload);
+            JSONObject jsonObject = (JSONObject) parser.parse(payload);
+
+            if(jsonObject.size() < 4)
+                return false;
         }
         catch (ParseException e)
         {

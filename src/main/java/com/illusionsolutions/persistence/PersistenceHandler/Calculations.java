@@ -9,16 +9,16 @@ import java.text.DecimalFormat;
 public class Calculations
 {
        private double emission;
-       private double price;
+       private double cost;
        private static DecimalFormat decimalFormat = new DecimalFormat(".##");
        private double CO2perKWh = 0.703;
-       private double pricePerKWH = 1.89;
+       private double costPerKWH = 1.89;
 
 
        public Calculations(double kwh)
        {
             emission = calculateEmissions(kwh);
-            price = calculatePrice(kwh);
+            cost = calculatecost(kwh);
        }
 
        /** Takes in a String as a parameter and checks whether said string is in the
@@ -35,11 +35,11 @@ public class Calculations
            return Double.parseDouble(emissionString);
        }
 
-        public double calculatePrice(double KWh)
+        public double calculatecost(double KWh)
         {
             decimalFormat.setRoundingMode(RoundingMode.UP);
-            String priceString = decimalFormat.format(KWh*pricePerKWH);
-            return Double.parseDouble(priceString);
+            String costString = decimalFormat.format(KWh*costPerKWH);
+            return Double.parseDouble(costString);
         }
 
        public double getEmission()
@@ -52,13 +52,13 @@ public class Calculations
            this.emission = emission;
        }
 
-        public double getPrice()
+        public double getcost()
         {
-            return price;
+            return cost;
         }
 
-        public void setPrice(double price)
+        public void setcost(double cost)
         {
-            this.price = price;
+            this.cost = cost;
         }
 }

@@ -184,20 +184,6 @@ public class FirebaseHandler implements PersistenceHandler
 				}
 			});
 
-			/*tempURL = "/device_data/" + device + "/" + year + "/" + month_int + "/" + day_int + "/" + storeObject.getDatetime() + "/calculations";
-			powerCloudRef = powerCloud.getReference(tempURL);
-
-			powerCloudRef.setValue(calculations, new DatabaseReference.CompletionListener() {
-				@Override
-				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-					if (databaseError != null) {
-						System.out.println("What is this? Amateur hour?");
-						System.out.println(databaseError.getMessage());
-					} else {
-						System.out.println("Success!");
-					}
-				}
-			});*/
 			return true;
 		}
 		else

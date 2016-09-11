@@ -4,10 +4,12 @@ import com.illusionsolutions.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
 import com.illusionsolutions.persistence.FirebaseHandler.FirebaseHandler;
+import com.illusionsolutions.persistence.PersistenceHandler.Calculations;
 import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
 import com.illusionsolutions.PublisherListener;
 import org.json.simple.JSONObject;
@@ -20,14 +22,11 @@ public class AssertTests
 {
     private final String firebaseURL = "https://powercloud-bf968.firebaseio.com/";
     private PhotonServer photonServer;
-    private FirebaseHandler fbHandler;
-    private final String authDIR = "auth.json";
+    private FirebaseHandler fbHandler = null;
     private final String deviceID = "Brandon";
-    private File authFile;
     private PublisherListener pListener;
+    private Calculations calculations;
 
-    //Create the Server
-    /*
     @Before
     public void createServer()
     {
@@ -39,23 +38,14 @@ public class AssertTests
         {
             e.printStackTrace();
         }
-
     }
 
     @Before
     public void prepareFirebase()
     {
-        try
-        {
-            authFile = new File(authDIR);
-            fbHandler = new FirebaseHandler(new FileInputStream(authFile), firebaseURL);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        fbHandler = new FirebaseHandler();
     }
-*/
+
     @Before
     public void preparePublisherListener()
     {
@@ -63,7 +53,6 @@ public class AssertTests
     }
 
     //Ensure that the server is running
-    /*
     @Test
     public void serverCanRun()
     {
@@ -79,16 +68,14 @@ public class AssertTests
             e.printStackTrace();
         }
     }
-    */
 
     //PublisherListenerTests
     @Test
     public void validateDataReturnsTrue()
     {
-        String data = "{\"truePower\":12.2, \"voltage\":2.1, \"current\":3.6}";
+        String data = "{\"power\":12.2, \"voltage\":2.1, \"current\":3.6}";
         boolean temp = pListener.validateData(data);
         assertTrue(temp);
-
     }
 
     @Test
@@ -105,12 +92,9 @@ public class AssertTests
         String data = "{\"truePower\":12.2, \"voltage\":2.1, \"current\":3.6}";
         JSONObject temp = pListener.convertToJson(data);
         assertNotNull(temp);
-
     }
 
-    //FirebaseHandler Tests
-    /*
-    @Test
+   /* @Test
     public void firebaseNotNull()
     {
         assertNotNull(fbHandler);
@@ -128,38 +112,32 @@ public class AssertTests
         assertEquals(0,fbHandler.checkMonth("Jan"));
     }
 
-    @Test
+    /*@Test
     public void storeWithObjectReturnsTrue()
     {
         StoreObject temp = new StoreObject();
         temp.setDatetime(new Date().getTime());
         temp.setId(deviceID);
         temp.setVoltage(12.2);
-        temp.setTruePower(2.3);
+        temp.setPower(2.3);
         temp.setCurrent(123.2);
-        temp.setReactivePower(123.2);
 
         boolean stored = fbHandler.store(temp);
         assertTrue(stored);
-
     }
 
-    @Test
+    /*@Test
     public void storeWithObjectReturnsFalse()
     {
-
         String wrongID = "";
         StoreObject temp = new StoreObject();
         temp.setDatetime(new Date().getTime());
         temp.setId(wrongID);
         temp.setVoltage(22.2);
-        temp.setTruePower(123.2);
         temp.setCurrent(77.2);
-        temp.setReactivePower(991.2);
+        temp.setPower(991.2);
 
         boolean stored = fbHandler.store(temp);
         assertTrue(stored);
-
-    }
-    */
+    }*/
 }

@@ -90,7 +90,7 @@ public class PublisherListener extends AbstractInterceptHandler
             calculations = new Calculations(power);
             toStore.setCalculations(calculations);
 
-            persistenceHandler.store(toStore, calculations);
+            persistenceHandler.store(toStore);
         }
         else
         {

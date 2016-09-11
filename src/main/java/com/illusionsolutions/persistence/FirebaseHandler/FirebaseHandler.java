@@ -39,6 +39,16 @@ public class FirebaseHandler implements PersistenceHandler
 		// Initialize the app with a service account, granting admin privileges
 	}
 
+	public FirebaseHandler()
+	{
+
+	}
+
+	public void closeFirebase()
+	{
+		powerCloud.goOffline();
+	}
+
 	/** The FirebaseHandler class constructer, takes in one string the URL.
 	 *
 	 * @param URL				The FirebaseHandler URL
@@ -60,7 +70,7 @@ public class FirebaseHandler implements PersistenceHandler
 	 * @param data			StoreObject object, containing the data that needs to be stored.
 	 * @return			    If the store is successful it returns true, else it returns false.
 	 */
-	public boolean store(StoreObject data, Calculations calculations)
+	public boolean store(StoreObject data)
 	{
 		this.calculations = calculations;
 		storeObject = data;
@@ -131,9 +141,9 @@ public class FirebaseHandler implements PersistenceHandler
 
 	/** The store method, takes in one Integer.
 	 *
-	 * @param id			The id where the data must be placed in Firebase.
+	 * @param id            The id where the data must be placed in Firebase.
 	 */
-	private boolean store(String id)
+	public boolean store(String id)
 	{
 		if (!id.equals("-1"))
 		{

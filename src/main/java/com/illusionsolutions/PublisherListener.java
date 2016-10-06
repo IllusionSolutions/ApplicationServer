@@ -73,7 +73,6 @@ public class PublisherListener extends AbstractInterceptHandler
 
         if(validateData(message[1]))
         {
-
             JSONObject jsonObject = convertToJson(message[1]);
 
             current = (Double) jsonObject.get("current");

@@ -70,7 +70,7 @@ public class AssertTests
     }
 
     //PublisherListenerTests
-    @Test
+ /*   @Test
     public void validateDataReturnsTrue()
     {
         String data = "{\"power\":12.2, \"voltage\":2.1, \"current\":3.6}";

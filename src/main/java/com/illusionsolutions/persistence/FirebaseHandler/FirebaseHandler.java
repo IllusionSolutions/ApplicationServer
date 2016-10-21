@@ -120,14 +120,14 @@ public class FirebaseHandler implements PersistenceHandler
 				public void onDataChange(DataSnapshot dataSnapshot)
 				{
 					String index = "-1";
-                    int active = 0;
+                    boolean active = false;
 
 					if (dataSnapshot.getChildrenCount() > 0)
 					{
 						for (DataSnapshot c : dataSnapshot.getChildren())
 						{
                             DataSnapshot obj = c.child("active");
-                            active = Integer.parseInt(obj.getValue().toString());
+                            active = (boolean) obj.getValue();
 
                             if (c.getKey().equals(id))
 							{
@@ -149,11 +149,11 @@ public class FirebaseHandler implements PersistenceHandler
 	 * @param id            The id where the data must be placed in Firebase.
      * @param active        Determines if the device is active or not.
 	 */
-	public boolean store(String id, int active)
+	public boolean store(String id, boolean active)
 	{
 		if (!id.equals("-1"))
 		{
-		    if(active == 1) {
+		    if(active == true) {
                 String day;
                 String month;
                 String year;

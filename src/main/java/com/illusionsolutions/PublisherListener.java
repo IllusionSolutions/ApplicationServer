@@ -9,6 +9,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
 
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class PublisherListener extends AbstractInterceptHandler
 {
     private PersistenceHandler persistenceHandler;
@@ -27,6 +32,7 @@ public class PublisherListener extends AbstractInterceptHandler
     @Override
     public void onPublish(InterceptPublishMessage message)
     {
+        String topic = message.getTopicName();
         System.out.println(
                 "\nClient " + message.getClientID() +
                 "\nTopic: " + message.getTopicName() +
@@ -35,7 +41,12 @@ public class PublisherListener extends AbstractInterceptHandler
         System.out.println("\nAttempting to store data:\n=============================\n");
         String[] temp = this.parse(message);
         System.out.println(temp[1]);
-        this.storeData(temp);
+        System.out.println("Message : " + topic);
+
+        if(topic.equals("powercloud"))
+            this.storeData(temp, topic);
+        else if(topic.equals("powernotify"))
+            this.notification(temp, topic);
     }
 
     /** Takes in the InterceptPublishMessage message, and seperates the Photons ID
@@ -63,7 +74,7 @@ public class PublisherListener extends AbstractInterceptHandler
      *
      * @param message           The String array containing the data from the Photon.
      */
-    public void storeData(String[] message) {
+    public void storeData(String[] message, String topic) {
         toStore = new StoreObject();
 
         double current = 0.0;
@@ -71,7 +82,7 @@ public class PublisherListener extends AbstractInterceptHandler
         double power = 0.0;
         long datetime = 0;
 
-        if(validateData(message[1]))
+        if(validateData(message[1], topic))
         {
             JSONObject jsonObject = convertToJson(message[1]);
 
@@ -97,6 +108,72 @@ public class PublisherListener extends AbstractInterceptHandler
         }
     }
 
+    public void notification(String[] message, String topic)
+    {
+
+        if(validateData(message[1], topic))
+        {
+            String user = "";
+            String payload = "";
+            long datetime = 0;
+            String content = "";
+
+            try {
+
+                JSONObject jsonObject = convertToJson(message[1]);
+                user = (String) jsonObject.get("user");
+                payload = (String) jsonObject.get("status");
+                datetime = (Long) jsonObject.get("time");
+                Date date = new Date(datetime*1000);
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                content = "===========Date:" + format.format(date) + "===========\n" +
+                          "User: " + user + "\n" +
+                          "Status: " + payload + "\n" +
+                          "==============================================\n";
+
+                File file = new File("notifications.txt");
+
+                // if file doesnt exists, then create it
+                if (!file.exists())
+                {
+                    System.out.println("New File");
+                    file.createNewFile();
+
+                    BufferedWriter out = new BufferedWriter(new FileWriter(file));
+                    out.write(content);
+                    out.close();
+                }
+                else
+                {
+                    BufferedReader in = new BufferedReader(new FileReader(file));
+                    String load = "";
+                    String str = "";
+                    while ((str = in.readLine()) != null)
+                    {
+                        load += str + "\n";
+                    }
+                    load += "\n" + content;
+
+                    BufferedWriter out = new BufferedWriter(new FileWriter(file));
+                    out.write(load);
+                    out.close();
+                }
+
+                System.out.println("Done");
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.err.println("Invalid JSON Object\nFrom: " +  message[0] + "\n");
+        }
+
+    }
+
     /** Takes in a String as a parameter and checks whether said string is in the
      * correct JSON format. This is achieved by passing the String to a JSON parser
      * which will return an exception if the String is not a correct (parseable) format.
@@ -104,7 +181,7 @@ public class PublisherListener extends AbstractInterceptHandler
      * @return                      Returns true if the String is in the correct JSON
      *                              format, else it returns false.
      */
-    public boolean validateData(String payload)
+    public boolean validateData(String payload, String topic)
     {
         JSONParser parser = new JSONParser();
 
@@ -112,8 +189,11 @@ public class PublisherListener extends AbstractInterceptHandler
         {
             JSONObject jsonObject = (JSONObject) parser.parse(payload);
 
-            if(jsonObject.size() < 4)
+            if((jsonObject.size() < 4 && jsonObject.size() > 4) && topic.equals("powercloud"))
                 return false;
+            else if((jsonObject.size() < 3 && jsonObject.size() > 3) && topic.equals("powernotify"))
+                return false;
+
         }
         catch (ParseException e)
         {

@@ -55,7 +55,6 @@ public class PhotonServer
             mqttBroker.startServer(classPathConfig, userHandlers);
             System.out.println("\n\nPhoton Server Started.\n\n");
             return true;
-
         }
         else
         {

@@ -160,5 +160,11 @@
       <artifactId>firebase-server-sdk</artifactId>
       <version>3.0.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.sendgrid</groupId>
+      <artifactId>sendgrid-java</artifactId>
+      <version>3.1.0</version>
+    </dependency>
   </dependencies>
 </project>

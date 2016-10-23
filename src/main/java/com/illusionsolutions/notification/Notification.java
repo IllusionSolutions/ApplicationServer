@@ -16,12 +16,13 @@ public class Notification
     private String message;
     private SendGrid sendgrid = new SendGrid("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");
 
-    public Notification()
+    public Notification(String r, String m)
     {
+        System.out.println(r + " ----------------- " + m);
         sender  = "notifications@power-cloud.tech";
-        recipient = "";
+        recipient = r;
         subject = "PowerCloud Notification";
-        message = "";
+        message = m;
     }
 
     String getRecipient()
@@ -44,7 +45,7 @@ public class Notification
         this.message = m;
     }
 
-    void sendNotification() throws IOException
+    public void sendNotification() throws IOException
     {
         Email from = new Email(sender);
         Email to = new Email(recipient);
@@ -65,7 +66,7 @@ public class Notification
         }
         catch (IOException ex)
         {
-            throw ex;
+            System.out.println(ex.getMessage());
         }
     }
 }

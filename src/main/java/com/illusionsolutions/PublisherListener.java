@@ -131,6 +131,7 @@ public class PublisherListener extends AbstractInterceptHandler
                           "Status: " + payload + "\n" +
                           "==============================================\n";
 
+                //File file = new File("/home/stuart/ApplicationServer/notifications.txt");
                 File file = new File("notifications.txt");
 
                 // if file doesnt exists, then create it
@@ -152,6 +153,7 @@ public class PublisherListener extends AbstractInterceptHandler
                     {
                         load += str + "\n";
                     }
+                    in.close();
                     load += "\n" + content;
 
                     BufferedWriter out = new BufferedWriter(new FileWriter(file));
@@ -160,12 +162,14 @@ public class PublisherListener extends AbstractInterceptHandler
                 }
 
                 System.out.println("Done");
-
+                persistenceHandler.retrieve(message[0],payload);
             }
             catch (IOException e)
             {
                 e.printStackTrace();
             }
+
+
         }
         else
         {

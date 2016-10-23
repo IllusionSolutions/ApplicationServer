@@ -7,15 +7,18 @@ package com.illusionsolutions.persistence.FirebaseHandler;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
+import com.illusionsolutions.notification.Notification;
 import com.illusionsolutions.persistence.PersistenceHandler.Calculations;
 import com.illusionsolutions.persistence.PersistenceHandler.PersistenceHandler;
 import com.illusionsolutions.persistence.PersistenceHandler.StoreObject;
+import com.illusionsolutions.notification.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileInputStream;
+import java.io.*;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FirebaseHandler implements PersistenceHandler
 {
@@ -26,6 +29,7 @@ public class FirebaseHandler implements PersistenceHandler
 	private DatabaseReference powerCloudRef;
 	private FirebaseDatabase powerCloud;
 	private FileInputStream authentication;
+	private String notificationEmail;
 
 	public FirebaseHandler(FileInputStream authenticationFile, String databaseUrl)
 	{
@@ -38,6 +42,7 @@ public class FirebaseHandler implements PersistenceHandler
 				.build();
 		FirebaseApp.initializeApp(options);
 		powerCloud = FirebaseDatabase.getInstance();
+		notificationEmail = "";
 
 		// Initialize the app with a service account, granting admin privileges
 	}
@@ -80,6 +85,50 @@ public class FirebaseHandler implements PersistenceHandler
 		validateId(data.getId());
 
 		return true;
+	}
+
+	public void retrieve(String id, String message)
+	{
+		powerCloudRef = powerCloud.getReference("/meta_data");
+
+		powerCloudRef.addListenerForSingleValueEvent(new ValueEventListener()
+		{
+			String email = "";
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot)
+			{
+				if (dataSnapshot.getChildrenCount() > 0)
+				{
+					for (DataSnapshot c : dataSnapshot.getChildren())
+					{
+						if(c.getKey().equals(id))
+						{
+							for (DataSnapshot child : c.getChildren())
+							{
+								if(child.getKey().equals("notificationEmail"))
+								{
+									email = child.getValue().toString();
+									try
+									{
+										Notification notification = new Notification(email,message);
+										notification.sendNotification();
+									}
+									catch (IOException e)
+									{
+										e.printStackTrace();
+									}
+									return;
+								}
+							}
+						}
+					}
+				}
+				email = "Invalid ID";
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {}
+		});
 	}
 
 	/** Takes in a month string, and determines the month's index from the month array.

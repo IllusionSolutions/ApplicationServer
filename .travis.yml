@@ -12,5 +12,5 @@ before_install:
 - bash _scripts/install.sh
 
 after_success:
-- bash <(curl -s https://codecov.io/bash) -t e0e8c63b-befd-4c3f-8308-99e5352007a0
+- bash <(curl -s https://codecov.io/bash)
 - scp -o StrictHostKeyChecking=no target/applicationServer-*.jar stuart@178.62.44.11:/home/stuart/ApplicationServer

@@ -13,4 +13,4 @@ before_install:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- scp -o StrictHostKeyChecking=no target/applicationServer-*.jar stuart@178.62.44.11:/home/stuart/ApplicationServer
+#- scp -o StrictHostKeyChecking=no target/applicationServer-*.jar stuart@power-cloud.tech:/home/stuart/ApplicationServer

@@ -4,6 +4,7 @@ jdk:
 - oraclejdk8
 script:
 - mvn clean compile assembly:single
+- mvn cobertura:cobertura
 
 addons:
   ssh_known_hosts: simplysentient.com
